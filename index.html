@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="مسار MASAR — مهامك وعاداتك في مكان واحد">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>مسار | MASAR</title>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><img class="brand-mark" src="./icon-192.png" alt="MASAR"><div><strong>مسار <span>MASAR</span></strong><small data-i18n="tagline">خطوتك التالية تبدأ هنا</small></div></div>
+      <div class="top-actions">
+        <button id="langBtn" class="icon-btn" aria-label="Change language">EN</button>
+        <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">☼</button>
+        <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙</button>
+      </div>
+    </header>
+
+    <section id="welcomeBanner" class="banner hidden">
+      <button class="close-banner" data-close="welcomeBanner" aria-label="Close">×</button>
+      <div><strong data-i18n="welcomeTitle">خلّي خطوتك الجاية أوضح</strong><p data-i18n="welcomeText">نظّم مهامك وعاداتك في مكان واحد.</p></div>
+      <button id="inviteBtn" class="secondary-btn" data-i18n="invite">ادعُ صديقًا</button>
+    </section>
+
+    <section id="installBanner" class="banner install-banner hidden">
+      <button class="close-banner" data-close="installBanner" aria-label="Close">×</button>
+      <div><strong data-i18n="installTitle">ثبّت مسار على جهازك</strong><p data-i18n="installText">افتحه بسرعة، واستخدم المهام المحفوظة دون إنترنت.</p></div>
+      <button id="installBtn" class="primary-btn" data-i18n="install">تثبيت التطبيق</button>
+    </section>
+
+    <main>
+      <section class="hero">
+        <div><p class="eyebrow" data-i18n="overview">نظرة عامة</p><h1 data-i18n="today">مسارك اليوم</h1><p id="todayLabel" class="muted"></p></div>
+        <div class="hero-actions"><button class="primary-btn" id="addTaskBtn">＋ <span data-i18n="addTask">إضافة مهمة</span></button><button class="secondary-btn" id="addHabitBtn">＋ <span data-i18n="addHabit">إضافة عادة</span></button><button class="secondary-btn" id="addReminderBtn">◷ <span data-i18n="addReminder">منبّه جديد</span></button></div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-card"><span data-i18n="openTasks">مهام مفتوحة</span><strong id="openCount">0</strong><small data-i18n="keepMoving">خطوة بخطوة</small></article>
+        <article class="stat-card"><span data-i18n="completed">مكتملة</span><strong id="doneCount">0</strong><small data-i18n="goodProgress">تقدّم يُحسب لك</small></article>
+        <article class="stat-card"><span data-i18n="activeHabits">عادات نشطة</span><strong id="habitCount">0</strong><small data-i18n="buildRhythm">ابنِ إيقاعك الخاص</small></article>
+      </section>
+
+      <nav class="tabs" aria-label="Main navigation">
+        <button class="tab active" data-view="tasks" data-i18n="tasks">المهام</button>
+        <button class="tab" data-view="habits" data-i18n="habits">العادات</button>
+        <button class="tab" data-view="reminders" data-i18n="reminders">المنبهات</button>
+        <button class="tab" data-view="calendar" data-i18n="calendar">التقويم</button>
+        <button class="tab" data-view="history" data-i18n="history">السجل</button>
+        <button class="tab" data-view="archive" data-i18n="archive">الأرشيف</button>
+      </nav>
+
+      <section class="toolbar">
+        <label class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="ابحث في مسارك..." data-i18n-placeholder="searchPlaceholder"></label>
+        <select id="filterSelect" aria-label="Filter tasks"><option value="all" data-i18n="filterAll">كل الحالات</option><option value="open" data-i18n="filterOpen">مفتوحة</option><option value="done" data-i18n="filterDone">مكتملة</option><option value="notdone" data-i18n="filterNotDone">لم تكتمل</option></select>
+      </section>
+      <section id="content" class="content-list"></section>
+      <section id="emptyState" class="empty-state hidden"><div class="empty-icon">✦</div><h2 data-i18n="emptyTitle">كل بداية صغيرة بتفرق</h2><p data-i18n="emptyText">أضف أول مهمة أو عادة وابدأ مسارك.</p><button id="emptyAddBtn" class="primary-btn" data-i18n="addFirst">أضف أول مهمة</button></section>
+    </main>
+
+    <footer><span data-i18n="footer">تم التصميم بواسطة</span> <a href="https://mute-mouse-67d8.yousseframadan2211.workers.dev/" target="_blank" rel="noopener noreferrer">NexCode</a></footer>
+  </div>
+
+  <dialog id="itemDialog">
+    <form id="itemForm" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow" id="dialogEyebrow">MASAR</p><h2 id="dialogTitle">إضافة مهمة</h2></div><button type="button" class="icon-btn" id="closeDialog">×</button></div>
+      <input type="hidden" id="itemId"><input type="hidden" id="itemType" value="task">
+      <label class="field"><span data-i18n="nameLabel">اسم المهمة</span><input id="itemName" required maxlength="160" autocomplete="off"></label>
+      <label class="field"><span data-i18n="notesLabel">ملاحظات (اختياري)</span><textarea id="itemNotes" rows="3" maxlength="3000"></textarea></label>
+      <div class="form-grid">
+        <label class="field"><span data-i18n="dateLabel">التاريخ (اختياري)</span><input id="itemDate" type="date"></label>
+        <label class="field"><span data-i18n="timeLabel">الوقت (اختياري)</span><input id="itemTime" type="time"></label>
+      </div>
+      <div class="form-grid">
+        <label class="field"><span data-i18n="priorityLabel">الأولوية</span><select id="itemPriority"><option value="low" data-i18n="low">منخفضة</option><option value="medium" selected data-i18n="medium">متوسطة</option><option value="high" data-i18n="high">عالية</option></select></label>
+        <label class="field"><span data-i18n="notifyLabel">التنبيه</span><select id="itemNotify"><option value="none" data-i18n="notifyNone">بدون</option><option value="notification" data-i18n="notifyOnly">إشعار</option><option value="alarm" data-i18n="alarmOnly">منبّه صوتي</option><option value="both" data-i18n="both">إشعار + منبّه</option></select></label>
+      </div>
+      <div class="form-grid">
+        <label class="field"><span data-i18n="toneLabel">النغمة</span><select id="itemTone"><option value="soft">Soft</option><option value="bell">Bell</option><option value="digital">Digital</option></select></label>
+        <label class="field"><span data-i18n="repeatLabel">التكرار</span><select id="itemRepeat"><option value="none" data-i18n="repeatNone">بدون تكرار</option><option value="daily" data-i18n="daily">يومي</option><option value="weekly" data-i18n="weekly">أسبوعي</option><option value="monthly" data-i18n="monthly">شهري</option></select></label>
+      </div>
+      <label class="field"><span data-i18n="parentLabel">مسار فرعي تابع لـ (اختياري)</span><select id="itemParent"><option value="" data-i18n="noParent">بدون — عنصر رئيسي</option></select></label>
+      <div id="reminderHint" class="privacy-note hidden" data-i18n="reminderHint">تعمل التنبيهات أثناء فتح التطبيق؛ تشغيلها في الخلفية يعتمد على دعم النظام والمتصفح.</div>
+      <div id="habitDirectionWrap" class="field hidden"><span data-i18n="habitDirection">هدفي من العادة</span><select id="habitDirection"><option value="increase" data-i18n="increase">أريد زيادتها</option><option value="decrease" data-i18n="decrease">أريد تقليلها</option></select></div>
+      <div id="habitScheduleWrap" class="field hidden"><span data-i18n="habitSchedule">جدول العادة</span><select id="habitSchedule"><option value="daily" data-i18n="daily">يومي</option><option value="weekdays" data-i18n="weekdays">أيام العمل</option><option value="weekly" data-i18n="weekly">أسبوعي</option><option value="custom" data-i18n="custom">مرن / مخصص</option></select></div>
+      <div class="dialog-actions"><button type="button" id="cancelDialog" class="secondary-btn" data-i18n="cancel">إلغاء</button><button type="submit" class="primary-btn" data-i18n="save">حفظ</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="settingsDialog">
+    <div class="dialog-head"><div><p class="eyebrow">MASAR</p><h2 data-i18n="settings">الإعدادات</h2></div><button class="icon-btn" id="closeSettings">×</button></div>
+    <div class="settings-list">
+      <button id="lockSetupBtn" class="settings-row"><span><strong data-i18n="appLock">قفل التطبيق</strong><small data-i18n="appLockDesc">إعداد PIN أو كلمة مرور</small></span><span>›</span></button>
+      <button id="exportBtn" class="settings-row"><span><strong data-i18n="exportData">تصدير نسخة احتياطية</strong><small data-i18n="exportDesc">حفظ بياناتك في ملف JSON</small></span><span>↓</span></button>
+      <label class="settings-row import-row"><span><strong data-i18n="importData">استيراد نسخة احتياطية</strong><small data-i18n="importDesc">دمج بيانات من ملف سابق</small></span><span>↑</span><input id="importFile" type="file" accept=".json,application/json"></label>
+      <button id="permissionBtn" class="settings-row"><span><strong data-i18n="notifications">إعداد الإشعارات</strong><small data-i18n="notificationsDesc">طلب الإذن إذا كان مدعومًا</small></span><span>♢</span></button>
+      <p class="privacy-note" data-i18n="privacyNote">بياناتك محفوظة محليًا على هذا الجهاز. احفظ نسخة احتياطية دوريًا لتقليل خطر فقدانها.</p>
+    </div>
+  </dialog>
+
+  <dialog id="lockDialog">
+    <form id="lockForm" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">MASAR</p><h2 id="lockTitle">قفل التطبيق</h2></div><button type="button" class="icon-btn" id="closeLock">×</button></div>
+      <p id="lockHelp" class="muted">أنشئ رمزًا أو كلمة مرور لحماية فتح التطبيق على هذا الجهاز.</p>
+      <label class="field"><span data-i18n="pinPassword">PIN أو كلمة مرور</span><input id="lockSecret" type="password" minlength="4" required autocomplete="new-password"></label>
+      <label class="field" id="confirmSecretWrap"><span data-i18n="confirmPassword">تأكيد الرمز</span><input id="confirmSecret" type="password" minlength="4" autocomplete="new-password"></label>
+      <div class="dialog-actions"><button type="button" class="secondary-btn" id="disableLockBtn" data-i18n="disableLock">تعطيل القفل</button><button type="submit" class="primary-btn" data-i18n="save">حفظ</button></div>
+    </form>
+  </dialog>
+  <dialog id="unlockDialog">
+    <form id="unlockForm" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">MASAR</p><h2 data-i18n="welcomeBack">أهلًا بعودتك</h2></div></div>
+      <p class="muted" data-i18n="unlockText">أدخل رمزك لفتح مسار على هذا الجهاز.</p>
+      <label class="field"><span data-i18n="pinPassword">PIN أو كلمة مرور</span><input id="unlockSecret" type="password" required autocomplete="current-password"></label>
+      <p id="unlockError" class="error-text"></p><button type="submit" class="primary-btn full-btn" data-i18n="unlock">فتح التطبيق</button>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
